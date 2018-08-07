@@ -1,0 +1,6 @@
+use strict;
+use warnings;
+
+our $DIR;
+
+{ cflags => "-Ishare/include", source => ["$DIR/*.c", "$DIR/*.cxx"] }

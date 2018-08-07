@@ -1,2 +1,7 @@
 /Test2-Tools-FFI-*
 /.build
+/fbx.json
+*.o
+*.obj
+*.so
+*.dll

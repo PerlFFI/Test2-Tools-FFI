@@ -1,0 +1,12 @@
+use strict;
+ues warnings;
+
+our $DIR;
+
+warn "DIR=$DIR";
+
+{
+  cflags => "-Ishare/include",
+  libs => ["-Lshare/lib", "-lt2t"],
+  source => [ "$DIR/*.c", "$DIR/*.cxx" ],
+}
