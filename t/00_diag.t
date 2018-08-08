@@ -15,6 +15,7 @@ $modules{$_} = $_ for qw(
   FFI::Platypus
   File::ShareDir::Install
   Test2::API
+  Test2::EventFacet::Trace
   Test2::V0
 );
 

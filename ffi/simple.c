@@ -1,28 +1,43 @@
 #include <t2t/simple.h>
+#undef diag
+#undef note
 
-int pass(const char *name)
+typedef void (*message_cb)(const char *);
+typedef void (*set_location_cb)(const char *, const char *, int, const char *);
+typedef void (*void_cb)(void);
+
+struct {
+  message_cb note;
+  message_cb diag;
+  set_location_cb set_location;
+  void_cb clear_location;
+} cb;
+
+void t2t_note(const char *message)
 {
-  /* TODO */
-  return 1;
+  cb.note(message);
 }
 
-int fail(const char *name)
+void t2t_diag(const char *message)
 {
-  /* TODO */
-  return 0;
+  cb.diag(message);
 }
 
-void diag(const char *message)
+void t2t_set_location(const char *language, const char *filename, int linenumber, const char *function)
 {
-  /* TODO */
+  cb.set_location(language, filename, linenumber, function);
 }
 
-void note(const char *message)
+void t2t_clear_location()
 {
-  /* TODO */
+  cb.clear_location();
 }
 
 void
-t2t_init()
+t2t_init(message_cb note, message_cb diag, set_location_cb set_location, void_cb clear_location)
 {
+  cb.note = note;
+  cb.diag = diag;
+  cb.set_location = set_location;
+  cb.clear_location = clear_location;
 }

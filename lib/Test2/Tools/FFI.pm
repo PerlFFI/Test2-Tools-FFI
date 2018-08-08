@@ -9,6 +9,8 @@ use FFI::CheckLib 0.11 ();
 use File::Basename ();
 use Cwd ();
 use File::Glob ();
+use Test2::API qw( context );
+use Test2::EventFacet::Trace;
 
 # ABSTRACT: Tools for testing FFI
 # VERSION
@@ -55,9 +57,59 @@ sub ffi
   $singleton;
 }
 
-my $ffi = FFI::Platypus->new;
+my @location;
+
+sub _set_location
+{
+  @location = @_;
+}
+
+sub _clear_location
+{
+  @location = ();
+}
+
+sub _note
+{
+  my($message) = @_;
+  my $ctx = context();
+  $ctx->send_event(
+    'Note',
+    message => $message,
+    scalar @location ? (
+      # this seems to swallow some info, be good
+      # to know if we need it.
+      trace => Test2::EventFacet::Trace->new(
+        frame => [@location],
+      )
+    ) : ()
+  );
+  $ctx->release;
+}
+
+sub _diag
+{
+  my($message) = @_;
+  my $ctx = context();
+  $ctx->send_event(
+    'Diag',
+    message => $message,
+    scalar @location ? (
+      trace => Test2::EventFacet::Trace->new(
+        frame => [@location],
+      )
+    ) : ()
+  );
+  $ctx->release;
+}
+
+
+our $ffi = FFI::Platypus->new;
+our @closures = map { $ffi->closure($_) } \&_note, \&_diag, \&_set_location, \&_clear_location;
 $ffi->package;
-$ffi->function(t2t_init => [] => 'void')->call;
+$ffi
+  ->function(t2t_init => ['(string)->void','(string)->void','(string,string,int,string)->void','()->void'] => 'void')
+  ->call(@closures);
 
 package Test2::Tools::FFI::Single;
 
