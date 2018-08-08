@@ -111,9 +111,33 @@ subtest 'diagnostic callbacks' => sub {
 };
 
 subtest 'call diagnostics from c' => sub {
-  skip_all 'todo';
-  ok 1;
-  ffi->test->function(test_diagnostics => [] => 'void')->call;
+  is(
+    intercept {
+      ffi->test->function(test_diagnostics => [] => 'void')->call;
+    },
+    array {
+      event Note => sub {
+        call message => 'this is debug information, may not be critical';
+        call facet_data => hash {
+          field trace => hash {
+            field frame => [qw( c t/ffi/test.c 12 test_diagnostics )];
+            etc;
+          };
+          etc;
+        };
+      };
+      event Diag => sub {
+        call message => 'this is IMPORTANT, make sure we see it';
+        call facet_data => hash {
+          field trace => hash {
+            field frame => [qw( c t/ffi/test.c 14 test_diagnostics )];
+            etc;
+          };
+          etc;
+        };
+      };
+    },
+  );
 };
 
 done_testing
