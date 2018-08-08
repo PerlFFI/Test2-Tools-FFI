@@ -76,7 +76,7 @@ sub runtime
   my($self) = @_;
 
   $self->{runtime} ||= (sub {
-    my $ffi = FFI::Platypus->new;
+    my $ffi = Test2::Tools::FFI::Platypus->new;
 
     my @dll = File::Glob::bsd_glob("blib/lib/auto/share/dist/*/lib/*");
     if(@dll)
@@ -108,7 +108,7 @@ sub test
   my($self) = @_;
 
   $self->{test} ||= do {
-    my $ffi = FFI::Platypus->new;
+    my $ffi = Test2::Tools::FFI::Platypus->new;
     my @lib = FFI::CheckLib::find_lib(
       lib => '*',
       libpath => 't/ffi/_build',
@@ -136,10 +136,33 @@ sub combined
   $self->{combined} ||= do {
     my $rt = $self->runtime;
     my $t  = $self->test;
-    my $ffi = FFI::Platypus->new;
+    my $ffi = Test2::Tools::FFI::Platypus->new;
     $ffi->lib($rt->lib, $t->lib);
     $ffi;
   };
+}
+
+package Test2::Tools::FFI::Platypus;
+
+use base qw( FFI::Platypus );
+use Test2::API ();
+
+sub symbol_ok
+{
+  my($self, $symbol_name, $test_name) = @_;
+
+  $test_name ||= "Library has symbol: $symbol_name";
+  my $address = $self->find_symbol($symbol_name);
+
+  my $ctx = Test2::API::context();
+  if($address)
+  {
+    $ctx->pass_and_release($test_name);
+  }
+  else
+  {
+    $ctx->fail_and_release($test_name, map { "looked in $_" } $self->lib);
+  }
 }
 
 1;

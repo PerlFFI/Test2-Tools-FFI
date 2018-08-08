@@ -9,6 +9,23 @@ subtest 'ffi->runtime' => sub {
   eval { $ffi->function(t2t_init => [] => 'void') };
   is $@, '';
 
+  ffi->runtime->symbol_ok('t2t_init');
+
+  is(
+    intercept { ffi->runtime->symbol_ok('xxx') },
+    array {
+      event Fail => sub {
+        call name => 'Library has symbol: xxx';
+        call facet_data => hash {
+          field info => array {
+            item {details => match qr{looked in .*/.*t2t}, debug => 1, tag => 'DIAG' };
+          };
+          etc;
+        };
+      };
+      end;
+    },
+  );
 };
 
 subtest 'ffi->test' => sub {
@@ -19,6 +36,8 @@ subtest 'ffi->test' => sub {
     $ffi->function(myanswer => [] => 'int')->call,
     42,
   );
+
+  ffi->test->symbol_ok('myanswer');
 
 };
 
@@ -35,6 +54,8 @@ subtest 'ffi->combined' => sub {
     42,
   );
 
+  ffi->combined->symbol_ok('t2t_init');
+  ffi->combined->symbol_ok('myanswer');
 };
 
 done_testing
