@@ -59,57 +59,6 @@ subtest 'ffi->combined' => sub {
   ffi->combined->symbol_ok('myanswer');
 };
 
-subtest 'diagnostic callbacks' => sub {
-
-  my $ffi = $Test2::Tools::FFI::ffi;
-
-  my $set_location = $ffi->function(t2t_simple_set_location => ['string', 'string', 'int', 'string'] => 'void');
-  $set_location->call('c', 'foo.c', 42, 'myfunc');
-
-  is(
-    intercept {
-      $ffi->function(t2t_simple_note => ['string'] => 'void')->call('a note')
-    },
-    array {
-      event Note => sub {
-        call message => 'a note';
-        call facet_data => hash {
-          field trace => hash {
-            field frame => [qw( c foo.c 42 myfunc )];
-            etc;
-          };
-          etc;
-        };
-      };
-      end;
-    },
-  );
-
-  $set_location->call('c', 'foo2.c', 56, 'myfunc3');
-
-  is(
-    intercept {
-      $ffi->function(t2t_simple_diag => ['string'] => 'void')->call('a diag')
-    },
-    array {
-      event Diag => sub {
-        call message => 'a diag';
-        call facet_data => hash {
-          field trace => hash {
-            field frame => [qw( c foo2.c 56 myfunc3 )];
-            etc;
-          };
-          etc;
-        };
-      };
-      end;
-    },
-  );
-
-  $ffi->function(t2t_simple_clear_location => [] => 'void')->call;
-
-};
-
 subtest 'call diagnostics from c' => sub {
   is(
     intercept {

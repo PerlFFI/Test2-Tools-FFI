@@ -57,94 +57,71 @@ sub ffi
   $singleton;
 }
 
-my @location;
-
-sub _set_location
-{
-  @location = @_;
-}
-
-sub _clear_location
-{
-  @location = ();
-}
-
 sub _pass
 {
-  my($name) = @_;
+  my($name, @location) = @_;
   my $ctx = context();
   $ctx->send_event(
     'Pass',
     name => $name,
-    scalar @location ? (
-      # this seems to swallow some info, be good
-      # to know if we need it.
-      trace => Test2::EventFacet::Trace->new(
-        frame => [@location],
-      )
-    ) : ()
+    # this seems to swallow some info, be good
+    # to know if we need it.
+    trace => Test2::EventFacet::Trace->new(
+      frame => [@location],
+    )
   );
   $ctx->release;
 }
 
 sub _fail
 {
-  my($name) = @_;
+  my($name, @location) = @_;
   my $ctx = context();
   $ctx->send_event(
     'Fail',
     name => $name,
-    scalar @location ? (
-      # this seems to swallow some info, be good
-      # to know if we need it.
-      trace => Test2::EventFacet::Trace->new(
-        frame => [@location],
-      )
-    ) : ()
+    trace => Test2::EventFacet::Trace->new(
+      frame => [@location],
+    )
   );
   $ctx->release;
 }
 
 sub _note
 {
-  my($message) = @_;
+  my($message, @location) = @_;
   my $ctx = context();
   $ctx->send_event(
     'Note',
     message => $message,
-    scalar @location ? (
-      # this seems to swallow some info, be good
-      # to know if we need it.
-      trace => Test2::EventFacet::Trace->new(
-        frame => [@location],
-      )
-    ) : ()
+    trace => Test2::EventFacet::Trace->new(
+      frame => [@location],
+    )
   );
   $ctx->release;
 }
 
 sub _diag
 {
-  my($message) = @_;
+  my($message, @location) = @_;
   my $ctx = context();
   $ctx->send_event(
     'Diag',
     message => $message,
-    scalar @location ? (
-      trace => Test2::EventFacet::Trace->new(
-        frame => [@location],
-      )
-    ) : ()
+    trace => Test2::EventFacet::Trace->new(
+      frame => [@location],
+    )
   );
   $ctx->release;
 }
 
 
 our $ffi = FFI::Platypus->new;
-our @closures = map { $ffi->closure($_) } \&_note, \&_diag, \&_set_location, \&_clear_location, \&_pass, \&_fail;
+our @closures = map { $ffi->closure($_) } \&_note, \&_diag, \&_pass, \&_fail;
 $ffi->package;
+$ffi->type('(string,string,string,int,string)->void' => 'message_cb_t');
 $ffi
-  ->function(t2t_simple_init => ['(string)->void','(string)->void','(string,string,int,string)->void','()->void','(string)->void','(string)->void'] => 'void')
+  ->function(t2t_simple_init => ['message_cb_t','message_cb_t','message_cb_t','message_cb_t'] => 'void')
   ->call(@closures);
 
 package Test2::Tools::FFI::Single;
