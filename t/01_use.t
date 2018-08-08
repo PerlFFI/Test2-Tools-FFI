@@ -2,6 +2,7 @@ use Test2::V0 -no_srand => 1;
 use Test2::Plugin::FFI::Package;
 sub require_ok ($);
 
+require_ok 'Alien::t2t';
 require_ok 'Test2::Tools::FFI';
 require_ok 'Test2::Plugin::FFI::Package';
 

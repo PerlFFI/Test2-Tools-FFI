@@ -13,6 +13,7 @@ $modules{$_} = $_ for qw(
   ExtUtils::MakeMaker
   FFI::CheckLib
   FFI::Platypus
+  File::ShareDir::Dist
   File::ShareDir::Install
   Test2::API
   Test2::EventFacet::Trace
