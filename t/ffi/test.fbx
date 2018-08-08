@@ -1,9 +1,7 @@
 use strict;
-ues warnings;
+use warnings;
 
 our $DIR;
-
-warn "DIR=$DIR";
 
 {
   cflags => "-Ishare/include",

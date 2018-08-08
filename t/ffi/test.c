@@ -1,1 +1,5 @@
-#include <t2t/simple.h>
+int
+myanswer()
+{
+  return 42;
+}
