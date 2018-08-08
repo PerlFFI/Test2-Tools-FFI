@@ -5,7 +5,6 @@ dist: trusty
 install:
   - perlbrew list
   - ./maint/travis-install-mods
-  - cpanm ExtUtils::MakeMaker
   - dzil -Iinc authordeps --missing | cpanm -n
   - dzil -Iinc listdeps   --missing | cpanm -n
 
