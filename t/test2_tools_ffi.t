@@ -59,7 +59,7 @@ subtest 'ffi->combined' => sub {
   ffi->combined->symbol_ok('myanswer');
 };
 
-subtest 'earm' => sub {
+subtest 'diagnostic callbacks' => sub {
 
   my $ffi = $Test2::Tools::FFI::ffi;
 
@@ -108,6 +108,12 @@ subtest 'earm' => sub {
 
   $ffi->function(t2t_clear_location => [] => 'void')->call;
 
+};
+
+subtest 'call diagnostics from c' => sub {
+  skip_all 'todo';
+  ok 1;
+  ffi->test->function(test_diagnostics => [] => 'void')->call;
 };
 
 done_testing
