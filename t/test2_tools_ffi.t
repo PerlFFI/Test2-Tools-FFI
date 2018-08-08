@@ -6,10 +6,10 @@ subtest 'ffi->runtime' => sub {
 
   my $ffi = ffi->runtime;
   isa_ok $ffi, 'FFI::Platypus';
-  eval { $ffi->function(t2t_init => [] => 'void') };
+  eval { $ffi->function(t2t_simple_init => [] => 'void') };
   is $@, '';
 
-  ffi->runtime->symbol_ok('t2t_init');
+  ffi->runtime->symbol_ok('t2t_simple_init');
 
   is(
     intercept { ffi->runtime->symbol_ok('xxx') },
@@ -47,7 +47,7 @@ subtest 'ffi->combined' => sub {
   my $ffi = ffi->combined;
   isa_ok $ffi, 'FFI::Platypus';
 
-  eval { $ffi->function(t2t_init => [] => 'void') };
+  eval { $ffi->function(t2t_simple_init => [] => 'void') };
   is $@, '';
 
   is(
@@ -55,7 +55,7 @@ subtest 'ffi->combined' => sub {
     42,
   );
 
-  ffi->combined->symbol_ok('t2t_init');
+  ffi->combined->symbol_ok('t2t_simple_init');
   ffi->combined->symbol_ok('myanswer');
 };
 
@@ -63,12 +63,12 @@ subtest 'diagnostic callbacks' => sub {
 
   my $ffi = $Test2::Tools::FFI::ffi;
 
-  my $set_location = $ffi->function(t2t_set_location => ['string', 'string', 'int', 'string'] => 'void');
+  my $set_location = $ffi->function(t2t_simple_set_location => ['string', 'string', 'int', 'string'] => 'void');
   $set_location->call('c', 'foo.c', 42, 'myfunc');
 
   is(
     intercept {
-      $ffi->function(t2t_note => ['string'] => 'void')->call('a note')
+      $ffi->function(t2t_simple_note => ['string'] => 'void')->call('a note')
     },
     array {
       event Note => sub {
@@ -89,7 +89,7 @@ subtest 'diagnostic callbacks' => sub {
 
   is(
     intercept {
-      $ffi->function(t2t_diag => ['string'] => 'void')->call('a diag')
+      $ffi->function(t2t_simple_diag => ['string'] => 'void')->call('a diag')
     },
     array {
       event Diag => sub {
@@ -106,21 +106,21 @@ subtest 'diagnostic callbacks' => sub {
     },
   );
 
-  $ffi->function(t2t_clear_location => [] => 'void')->call;
+  $ffi->function(t2t_simple_clear_location => [] => 'void')->call;
 
 };
 
 subtest 'call diagnostics from c' => sub {
   is(
     intercept {
-      ffi->test->function(test_diagnostics => [] => 'void')->call;
+      ffi->test->function(test_simple_diagnostics => [] => 'void')->call;
     },
     array {
       event Note => sub {
         call message => 'this is debug information, may not be critical';
         call facet_data => hash {
           field trace => hash {
-            field frame => [qw( c t/ffi/test.c 12 test_diagnostics )];
+            field frame => [qw( c t/ffi/test.c 12 test_simple_diagnostics )];
             etc;
           };
           etc;
@@ -130,14 +130,48 @@ subtest 'call diagnostics from c' => sub {
         call message => 'this is IMPORTANT, make sure we see it';
         call facet_data => hash {
           field trace => hash {
-            field frame => [qw( c t/ffi/test.c 14 test_diagnostics )];
+            field frame => [qw( c t/ffi/test.c 14 test_simple_diagnostics )];
             etc;
           };
           etc;
         };
       };
+      end;
     },
   );
+};
+
+subtest 'call pass/fail from c' => sub {
+
+  is(
+    intercept {
+      ffi->test->function(test_simple_passfail => [] => 'void')->call;
+    },
+    array {
+      event Pass => sub {
+        call name => 'this is a passing test';
+        call facet_data => hash {
+          field trace => hash {
+            field frame => [qw( c t/ffi/test.c 19 test_simple_passfail )];
+            etc;
+          };
+          etc;
+        };
+      };
+      event Fail => sub {
+        call name => 'this is a failing test';
+        call facet_data => hash {
+          field trace => hash {
+            field frame => [qw( c t/ffi/test.c 20 test_simple_passfail )];
+            etc;
+          };
+          etc;
+        };
+      };
+      end;
+    },
+  );
+
 };
 
 done_testing
