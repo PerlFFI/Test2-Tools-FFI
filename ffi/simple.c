@@ -21,3 +21,8 @@ void note(const char *message)
 {
   /* TODO */
 }
+
+void
+t2t_init()
+{
+}

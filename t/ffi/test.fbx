@@ -5,6 +5,7 @@ our $DIR;
 
 {
   cflags => "-Ishare/include",
-  libs => ["-Lshare/lib", "-lt2t"],
+  # TODO: shoudln't need to hard code these paths
+  libs => ["-Lshare/lib", "-Lblib/lib/auto/share/dist/Test2-Tools-FFI/lib", "-lt2t"],
   source => [ "$DIR/*.c", "$DIR/*.cxx" ],
 }

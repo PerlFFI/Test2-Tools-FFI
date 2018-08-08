@@ -35,6 +35,10 @@ sub ffi
   $singleton;
 }
 
+my $ffi = FFI::Platypus->new;
+$ffi->package;
+$ffi->function(t2t_init => [] => 'void')->call;
+
 package Test2::Tools::FFI::Single;
 
 =head1 FUNCTIONS

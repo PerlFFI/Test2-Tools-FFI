@@ -1,4 +1,5 @@
 use Test2::V0 -no_srand => 1;
+use Test2::Plugin::FFI::Package;
 use Test2::Tools::FFI;
 
 subtest 'ffi->test' => sub {

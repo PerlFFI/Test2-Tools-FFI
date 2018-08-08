@@ -10,10 +10,12 @@ my %modules;
 my $post_diag;
 
 $modules{$_} = $_ for qw(
+  Cwd
   Exporter
   ExtUtils::MakeMaker
   FFI::CheckLib
   FFI::Platypus
+  File::Basename
   File::ShareDir::Install
   Test2::V0
 );
