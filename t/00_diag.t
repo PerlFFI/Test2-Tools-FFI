@@ -16,6 +16,7 @@ $modules{$_} = $_ for qw(
   FFI::CheckLib
   FFI::Platypus
   File::Basename
+  File::Glob
   File::ShareDir::Install
   Test2::V0
 );

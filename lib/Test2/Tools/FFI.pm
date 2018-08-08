@@ -6,6 +6,9 @@ use 5.010;
 use base qw( Exporter );
 use FFI::Platypus;
 use FFI::CheckLib 0.11 ();
+use File::Basename ();
+use Cwd ();
+use File::Glob ();
 
 # ABSTRACT: Tools for testing FFI
 # VERSION
@@ -14,12 +17,29 @@ our @EXPORT = qw( ffi );
 
 =head1 SYNOPSIS
 
+In your t/ffi/test.c:
+
+ int
+ mytest()
+ {
+   return 42;
+ }
+
+In your t/mytest.t:
+
  use Test2::V0;
  use Test2::Tools::FFI;
 
+ is(
+   ffi->test->function( mytest => [] => 'int')->call,
+   42,
+ );
+ 
  done_testing;
 
 =head1 DESCRIPTION
+
+This Test2 Tools module provide some basic tools for testing FFI modules.
 
 =cut
 
@@ -53,7 +73,26 @@ Returns a L<FFI::Platypus> instance connected to the runtime for your module.
 
 sub runtime
 {
-  die 'todo';
+  my($self) = @_;
+
+  $self->{runtime} ||= (sub {
+    my $ffi = FFI::Platypus->new;
+
+    my @dll = File::Glob::bsd_glob("blib/lib/auto/share/dist/*/lib/*");
+    if(@dll)
+    {
+      $ffi->lib(@dll);
+      return $ffi;
+    }
+
+    @dll = File::Glob::bsd_glob("share/lib/*");
+    if(@dll)
+    {
+      $ffi->lib(@dll);
+      return $ffi;
+    }
+    $ffi;
+  })->();
 }
 
 =head2 ffi->test
@@ -78,6 +117,27 @@ sub test
     Carp::croak("unable to find test lib in t/ffi/_build")
       unless @lib;
     $ffi->lib(@lib);
+    $ffi;
+  };
+}
+
+=head2 ffi->combined
+
+ my $ffi = ffi->combined;
+
+Return a L<FFI::Platypus> instance with the combined test and runtime libraries for your module.
+
+=cut
+
+sub combined
+{
+  my($self) = @_;
+
+  $self->{combined} ||= do {
+    my $rt = $self->runtime;
+    my $t  = $self->test;
+    my $ffi = FFI::Platypus->new;
+    $ffi->lib($rt->lib, $t->lib);
     $ffi;
   };
 }

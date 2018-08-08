@@ -4,12 +4,29 @@ Tools for testing FFI
 
 # SYNOPSIS
 
+In your t/ffi/test.c:
+
+    int
+    mytest()
+    {
+      return 42;
+    }
+
+In your t/mytest.t:
+
     use Test2::V0;
     use Test2::Tools::FFI;
 
+    is(
+      ffi->test->function( mytest => [] => 'int')->call,
+      42,
+    );
+    
     done_testing;
 
 # DESCRIPTION
+
+This Test2 Tools module provide some basic tools for testing FFI modules.
 
 # FUNCTIONS
 
@@ -24,6 +41,12 @@ Returns a [FFI::Platypus](https://metacpan.org/pod/FFI::Platypus) instance conne
     my $ffi = ffi->test;
 
 Returns a [FFI::Platypus](https://metacpan.org/pod/FFI::Platypus) instance connected to the test for your module.
+
+## ffi->combined
+
+    my $ffi = ffi->combined;
+
+Return a [FFI::Platypus](https://metacpan.org/pod/FFI::Platypus) instance with the combined test and runtime libraries for your module.
 
 # AUTHOR
 
