@@ -115,14 +115,16 @@ sub _diag
   $ctx->release;
 }
 
-
-our $ffi = FFI::Platypus->new;
-our @closures = map { $ffi->closure($_) } \&_note, \&_diag, \&_pass, \&_fail;
-$ffi->package;
-$ffi->type('(string,string,string,int,string)->void' => 'message_cb_t');
-$ffi
-  ->function(t2t_simple_init => ['message_cb_t','message_cb_t','message_cb_t','message_cb_t'] => 'void')
-  ->call(@closures);
+{
+  local $ENV{FFI_PLATYPUS_DLERROR} = 1;
+  our $ffi = FFI::Platypus->new;
+  our @closures = map { $ffi->closure($_) } \&_note, \&_diag, \&_pass, \&_fail;
+  $ffi->package;
+  $ffi->type('(string,string,string,int,string)->void' => 'message_cb_t');
+  $ffi
+    ->function(t2t_simple_init => ['message_cb_t','message_cb_t','message_cb_t','message_cb_t'] => 'void')
+    ->call(@closures);
+}
 
 package Test2::Tools::FFI::Single;
 
