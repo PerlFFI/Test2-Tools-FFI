@@ -7,6 +7,9 @@ pod_spelling_system:
   # intentionally
   stopwords:
     - EUMM
+    - libt
+    - cflags
+    - libs
 
 pod_coverage:
   skip: 0
