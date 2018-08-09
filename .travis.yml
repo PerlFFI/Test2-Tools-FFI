@@ -5,8 +5,8 @@ dist: trusty
 install:
   - perlbrew list
   - ./maint/travis-install-mods
-  - dzil -Iinc authordeps --missing | cpanm -n
-  - dzil -Iinc listdeps   --missing | cpanm -n
+  - dzil  authordeps --missing | cpanm -n
+  - dzil  listdeps   --missing | cpanm -n
 
 perl:
   - "5.14"
@@ -18,7 +18,7 @@ perl:
   - "5.26"
 
 script:
-  - dzil -Iinc test -v
+  - dzil test -v
 
 env:
   global:
