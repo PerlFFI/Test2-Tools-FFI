@@ -2,7 +2,7 @@ package Test2::Plugin::FFI::Package;
 
 use strict;
 use warnings;
-use 5.010;
+use 5.008001;
 use FFI::CheckLib 0.11 qw( find_lib );
 use Cwd qw( getcwd );
 use File::Basename qw( basename );

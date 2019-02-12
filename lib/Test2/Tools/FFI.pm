@@ -2,7 +2,7 @@ package Test2::Tools::FFI;
 
 use strict;
 use warnings;
-use 5.010;
+use 5.008001;
 use base qw( Exporter );
 use FFI::Platypus;
 use FFI::CheckLib 0.11 ();
@@ -45,16 +45,18 @@ This Test2 Tools module provide some basic tools for testing FFI modules.
 
 =cut
 
-sub ffi
 {
-  state $singleton;
+  my $singleton;
 
-  unless($singleton)
+  sub ffi
   {
-    $singleton = bless {}, 'Test2::Tools::FFI::Single';
-  }
+    unless($singleton)
+    {
+      $singleton = bless {}, 'Test2::Tools::FFI::Single';
+    }
 
-  $singleton;
+    $singleton;
+  }
 }
 
 sub _pass
