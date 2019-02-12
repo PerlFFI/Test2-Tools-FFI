@@ -15,7 +15,7 @@ use Test2::EventFacet::Trace;
 # ABSTRACT: Tools for testing FFI
 # VERSION
 
-our @EXPORT = qw( ffi );
+our @EXPORT = qw( ffi lib );
 
 =head1 SYNOPSIS
 
@@ -46,17 +46,16 @@ This Test2 Tools module provide some basic tools for testing FFI modules.
 =cut
 
 {
-  my $singleton;
+  my $s;
 
   sub ffi
-  {
-    unless($singleton)
-    {
-      $singleton = bless {}, 'Test2::Tools::FFI::Single';
-    }
+  { $s ||= bless {}, 'Test2::Tools::FFI::Single' }
+}
 
-    $singleton;
-  }
+{
+  my $s;
+  sub lib
+  { $s ||= bless {}, 'Test2::Tools::FFI::Lib' }
 }
 
 sub _pass
@@ -147,14 +146,7 @@ sub runtime
   $self->{runtime} ||= (sub {
     my $ffi = Test2::Tools::FFI::Platypus->new;
 
-    my @dll = File::Glob::bsd_glob("blib/lib/auto/share/dist/*/lib/*");
-    if(@dll)
-    {
-      $ffi->lib(@dll);
-      return $ffi;
-    }
-
-    @dll = File::Glob::bsd_glob("share/lib/*");
+    my @dll = Test2::Tools::FFI::lib->runtime;
     if(@dll)
     {
       $ffi->lib(@dll);
@@ -178,11 +170,7 @@ sub test
 
   $self->{test} ||= do {
     my $ffi = Test2::Tools::FFI::Platypus->new;
-    my @lib = FFI::CheckLib::find_lib(
-      lib => '*',
-      libpath => 't/ffi/_build',
-      systempath => [],
-    );
+    my @lib = Test2::Tools::FFI::lib->test;
     Carp::croak("unable to find test lib in t/ffi/_build")
       unless @lib;
     $ffi->lib(@lib);
@@ -209,6 +197,56 @@ sub combined
     $ffi->lib($rt->lib, $t->lib);
     $ffi;
   };
+}
+
+package Test2::Tools::FFI::Lib;
+
+sub new
+{
+  my($class, @list) = @_;
+  bless {}, $class;
+}
+
+=head2 lib->runtime
+
+ my @dlls = lib->runtime;
+
+Returns a list of runtime libraries.
+
+=cut
+
+sub runtime
+{
+  my($self) = @_;
+
+  @{ $self->{runtime} ||= do {
+    my @dll = File::Glob::bsd_glob("blib/lib/auto/share/dist/*/lib/*");
+    return @dll if @dll;
+    @dll = File::Glob::bsd_glob("share/lib/*");
+    [@dll];
+  } };
+}
+
+=head2 lib->test
+
+ my @dlls = lib->test;
+
+Return a list of test libraries.
+
+=cut
+
+sub test
+{
+  my($self) = @_;
+
+  @{ $self->{test} ||= do {
+    my @lib = FFI::CheckLib::find_lib(
+      lib => '*',
+      libpath => 't/ffi/_build',
+      systempath => [],
+    );
+    [@lib];
+  } };
 }
 
 package Test2::Tools::FFI::Platypus;

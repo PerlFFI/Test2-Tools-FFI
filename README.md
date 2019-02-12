@@ -48,6 +48,18 @@ Returns a [FFI::Platypus](https://metacpan.org/pod/FFI::Platypus) instance conne
 
 Return a [FFI::Platypus](https://metacpan.org/pod/FFI::Platypus) instance with the combined test and runtime libraries for your module.
 
+## lib->runtime
+
+    my @dlls = lib->runtime;
+
+Returns a list of runtime libraries.
+
+## lib->test
+
+    my @dlls = lib->test;
+
+Return a list of test libraries.
+
 # AUTHOR
 
 Graham Ollis <plicease@cpan.org>
