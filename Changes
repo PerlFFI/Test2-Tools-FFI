@@ -1,6 +1,7 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+  - add `ok` to libt2t (simple)
 
 0.01      2019-02-12 21:39:10 -0500
   - initial version
