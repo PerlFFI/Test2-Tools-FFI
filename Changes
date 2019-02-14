@@ -1,6 +1,7 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+  - Mac OS X specific linker fixes
 
 0.02      2019-02-12 21:44:25 -0500
   - add `ok` to libt2t (simple)

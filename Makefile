@@ -1,7 +1,7 @@
 all:
 	maint/fbx all
 
-clean:
+realclean clean:
 	maint/fbx clean
 
 test: all

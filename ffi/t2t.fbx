@@ -3,4 +3,13 @@ use warnings;
 
 our $DIR;
 
-{ cflags => "-Ishare/include", source => ["$DIR/*.c", "$DIR/*.cxx"] }
+my @libs;
+# TODO: FFI::Build should do this automatically.
+push @libs, '-install_name', '@rpath/libt2t.dylib' if $^O eq 'darwin';
+
+{
+  verbose => 1,
+  cflags => "-Ishare/include",
+  libs => \@libs,
+  source => ["$DIR/*.c"],
+}
