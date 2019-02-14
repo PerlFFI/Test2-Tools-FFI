@@ -17,4 +17,3 @@ pod_coverage:
   # for either Class or method.
   private:
     - Test2::Tools::FFI#ffi
-    - Test2::Tools::FFI#lib
