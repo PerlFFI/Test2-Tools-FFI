@@ -14,26 +14,26 @@ struct {
 } cb;
 
 void
-t2t_simple_note(const char *message, const char *language, const char *filename, int linenumber, const char *function)
+t2t_simple_note(const char *language, const char *filename, int linenumber, const char *function, const char *message)
 {
   cb.note(message, language, filename, linenumber, function);
 }
 
 void
-t2t_simple_diag(const char *message, const char *language, const char *filename, int linenumber, const char *function)
+t2t_simple_diag(const char *language, const char *filename, int linenumber, const char *function, const char *message)
 {
   cb.diag(message, language, filename, linenumber, function);
 }
 
 int
-t2t_simple_pass(const char *name, const char *language, const char *filename, int linenumber, const char *function)
+t2t_simple_pass(const char *language, const char *filename, int linenumber, const char *function, const char *name)
 {
   cb.pass(name, language, filename, linenumber, function);
   return 1;
 }
 
 int
-t2t_simple_fail(const char *name, const char *language, const char *filename, int linenumber, const char *function)
+t2t_simple_fail(const char *language, const char *filename, int linenumber, const char *function, const char *name)
 {
   cb.fail(name, language, filename, linenumber, function);
   return 0;
