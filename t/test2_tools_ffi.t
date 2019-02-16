@@ -88,6 +88,34 @@ subtest 'call diagnostics from c' => sub {
       end;
     },
   );
+
+  is(
+    intercept {
+      ffi->test->function(test_format_diagnostics => [] => 'void')->call;
+    },
+    array {
+      event Note => sub {
+        call message => 'note number = 42';
+        call facet_data => hash {
+          field trace => hash {
+            field frame => [qw( c t/ffi/test.c 20 test_format_diagnostics )];
+            etc;
+          };
+          etc;
+        };
+      };
+      event Diag => sub {
+        call message => 'diag number = 47';
+        call facet_data => hash {
+          field trace => hash {
+            field frame => [qw( c t/ffi/test.c 21 test_format_diagnostics )];
+            etc;
+          };
+          etc;
+        };
+      };
+    },
+  );
 };
 
 subtest 'call pass/fail from c' => sub {
@@ -101,7 +129,7 @@ subtest 'call pass/fail from c' => sub {
         call name => 'this is a passing test';
         call facet_data => hash {
           field trace => hash {
-            field frame => [qw( c t/ffi/test.c 19 test_simple_passfail )];
+            field frame => [qw( c t/ffi/test.c 26 test_simple_passfail )];
             etc;
           };
           etc;
@@ -111,7 +139,7 @@ subtest 'call pass/fail from c' => sub {
         call name => 'this is a failing test';
         call facet_data => hash {
           field trace => hash {
-            field frame => [qw( c t/ffi/test.c 20 test_simple_passfail )];
+            field frame => [qw( c t/ffi/test.c 27 test_simple_passfail )];
             etc;
           };
           etc;

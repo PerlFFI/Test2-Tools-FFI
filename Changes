@@ -1,13 +1,16 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
-  - remove lib->test and lib->runtime as they are redundent
+  - Remove lib->test and lib->runtime as they are redundent
+  - Add `notef` and `diagf` to libt2t (simple)
+  - libt2t (simple) calls will abort if it hasn't been initalized
+  - add deinit function to deinitalize.
 
 0.03      2019-02-14 15:51:50 -0500
   - Mac OS X specific linker fixes
 
 0.02      2019-02-12 21:44:25 -0500
-  - add `ok` to libt2t (simple)
+  - Add `ok` to libt2t (simple)
 
 0.01      2019-02-12 21:39:10 -0500
   - initial version
