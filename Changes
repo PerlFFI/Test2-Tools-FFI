@@ -1,6 +1,9 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+0.04      2019-02-16 09:34:53 -0500
+  - First CPAN release
   - Remove lib->test and lib->runtime as they are redundent
   - Add `notef` and `diagf` to libt2t (simple)
   - libt2t (simple) calls will abort if it hasn't been initalized
