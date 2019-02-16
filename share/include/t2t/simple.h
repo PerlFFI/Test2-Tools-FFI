@@ -1,6 +1,10 @@
 #ifndef T2T_SIMPLE_H
 #define T2T_SIMPLE_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef void (*t2t_simple_message_cb)(const char *, const char *, const char *, int, const char *);
 
 void t2t_simple_note(const char *, const char *, int, const char *, const char *);
@@ -23,5 +27,8 @@ int t2t_simple_fail(const char *, const char *, int, const char *, const char *)
 void t2t_simple_init(t2t_simple_message_cb, t2t_simple_message_cb, t2t_simple_message_cb, t2t_simple_message_cb);
 void t2t_simple_deinit();
 
+#ifdef __cplusplus
+}
+#endif
 
 #endif
