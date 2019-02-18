@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+0.05      2019-02-18 11:24:43 -0500
   - Fix downstream install bug on Windows (gh#1)
 
 0.04      2019-02-16 09:34:53 -0500
