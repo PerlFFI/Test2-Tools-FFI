@@ -1,6 +1,7 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+  - Fix downstream install bug on Windows (gh#1)
 
 0.04      2019-02-16 09:34:53 -0500
   - First CPAN release

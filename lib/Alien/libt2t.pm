@@ -41,7 +41,9 @@ Returns the directory where the libt2t library is installed.
 
 sub dist_dir
 {
-  File::ShareDir::Dist::dist_share('Test2-Tools-FFI');
+  my $dir = File::ShareDir::Dist::dist_share('Test2-Tools-FFI');
+  $dir =~ s{\\}{/}g if $^O eq 'MSWin32';
+  $dir;
 }
 
 =head2 cflags
