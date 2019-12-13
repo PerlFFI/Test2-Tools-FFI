@@ -5,14 +5,22 @@
 extern "C" {
 #endif
 
+#ifndef T2T_SIMPLE_EXPORT
+#ifdef _MSC_VER
+#define T2T_SIMPLE_EXPORT __declspec(dllimport)
+#else
+#define T2T_SIMPLE_EXPORT
+#endif
+#endif
+
 typedef void (*t2t_simple_message_cb)(const char *, const char *, const char *, int, const char *);
 
-void t2t_simple_note(const char *, const char *, int, const char *, const char *);
-void t2t_simple_notef(const char *, const char *, int, const char *, const char *, ...);
-void t2t_simple_diag(const char *, const char *, int, const char *, const char *);
-void t2t_simple_diagf(const char *, const char *, int, const char *, const char *, ...);
-int t2t_simple_pass(const char *, const char *, int, const char *, const char *);
-int t2t_simple_fail(const char *, const char *, int, const char *, const char *);
+T2T_SIMPLE_EXPORT void t2t_simple_note(const char *, const char *, int, const char *, const char *);
+T2T_SIMPLE_EXPORT void t2t_simple_notef(const char *, const char *, int, const char *, const char *, ...);
+T2T_SIMPLE_EXPORT void t2t_simple_diag(const char *, const char *, int, const char *, const char *);
+T2T_SIMPLE_EXPORT void t2t_simple_diagf(const char *, const char *, int, const char *, const char *, ...);
+T2T_SIMPLE_EXPORT int t2t_simple_pass(const char *, const char *, int, const char *, const char *);
+T2T_SIMPLE_EXPORT int t2t_simple_fail(const char *, const char *, int, const char *, const char *);
 
 #ifndef T2T_SIMPLE_API_ONLY
 #define note(message) t2t_simple_note("c", __FILE__, __LINE__, __func__, message)
@@ -24,8 +32,8 @@ int t2t_simple_fail(const char *, const char *, int, const char *, const char *)
 #define ok(expression, message) expression ? t2t_simple_pass("c", __FILE__, __LINE__, __func__, message) : t2t_simple_fail("c", __FILE__, __LINE__, __func__, message)
 #endif
 
-void t2t_simple_init(t2t_simple_message_cb, t2t_simple_message_cb, t2t_simple_message_cb, t2t_simple_message_cb);
-void t2t_simple_deinit();
+T2T_SIMPLE_EXPORT void t2t_simple_init(t2t_simple_message_cb, t2t_simple_message_cb, t2t_simple_message_cb, t2t_simple_message_cb);
+T2T_SIMPLE_EXPORT void t2t_simple_deinit();
 
 #ifdef __cplusplus
 }
