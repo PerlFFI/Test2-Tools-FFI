@@ -1,4 +1,4 @@
-# Test2::Tools::FFI [![Build Status](https://secure.travis-ci.org/Perl5-FFI/Test2-Tools-FFI.png)](http://travis-ci.org/Perl5-FFI/Test2-Tools-FFI)
+# Test2::Tools::FFI [![Build Status](https://travis-ci.org/PerlFFI/Test2-Tools-FFI.svg)](http://travis-ci.org/PerlFFI/Test2-Tools-FFI)
 
 Tools for testing FFI
 
