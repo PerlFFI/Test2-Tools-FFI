@@ -1,4 +1,4 @@
-# Test2::Tools::FFI [![Build Status](https://travis-ci.org/PerlFFI/Test2-Tools-FFI.svg)](http://travis-ci.org/PerlFFI/Test2-Tools-FFI)
+# Test2::Tools::FFI ![linux](https://github.com/PerlFFI/Test2-Tools-FFI/workflows/linux/badge.svg)
 
 Tools for testing FFI
 
