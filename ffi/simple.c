@@ -3,6 +3,11 @@
 #include <stdarg.h>
 
 #define T2T_SIMPLE_API_ONLY
+#ifdef _MSC_VER
+#define T2T_SIMPLE_EXPORT __declspec(dllexport)
+#else
+#define T2T_SIMPLE_EXPORT
+#endif
 #include <t2t/simple.h>
 
 struct {
@@ -110,7 +115,6 @@ t2t_simple_diagf(const char *language, const char *filename, int linenumber, con
   else
     do_abort();
 }
-
 
 int
 t2t_simple_pass(const char *language, const char *filename, int linenumber, const char *function, const char *name)
