@@ -34,6 +34,19 @@ This Test2 Tools module provide some basic tools for testing FFI modules.
 
 # FUNCTIONS
 
+## ffi\_options
+
+```
+ffi_options %options;
+```
+
+This must be run before any `ffi->` functions.  Options available:
+
+- api
+
+    The [FFI::Platypus](https://metacpan.org/pod/FFI::Platypus) api level.  Zero (0) by default for backward compat,
+    but it is recommended that you use One (1).
+
 ## ffi->runtime
 
 ```perl
