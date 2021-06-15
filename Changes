@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+0.06      2021-06-15 12:47:01 -0600
   - Added ffi_options function (gh#3, gh#8)
   - ffi->test and ffi->combined will now build test lib
     if there is a t/ffi directory (gh#8)
