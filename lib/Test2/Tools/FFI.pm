@@ -79,7 +79,7 @@ but it is recommended that you use One (1).
 
   sub ffi_options
   {
-    my(undef, %options) = @_;
+    my(%options) = @_;
     Carp::croak("Please call ffi_options before calling ffi")
       if defined $singleton;
 
