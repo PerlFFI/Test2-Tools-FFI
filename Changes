@@ -2,6 +2,8 @@ Revision history for {{$dist->name}}
 
 {{$NEXT}}
   - Added ffi_options function (gh#3, gh#8)
+  - ffi->test and ffi->combined will now build test lib
+    if there is a t/ffi directory (gh#8)
 
 0.05      2019-02-18 11:24:43 -0500
   - Fix downstream install bug on Windows (gh#1)

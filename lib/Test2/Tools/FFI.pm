@@ -210,11 +210,45 @@ Returns a L<FFI::Platypus> instance connected to the test for your module.
 
 =cut
 
+sub _build_test
+{
+  if(-d "t/ffi")
+  {
+    require FFI::Build::MM;
+    require Capture::Tiny;
+
+    my($output, $error) = Capture::Tiny::capture_merged(sub {
+      local $@ = '';
+      eval {
+        my $fbmm = FFI::Build::MM->new( save => 0 );
+        $fbmm->mm_args( DISTNAME => "My-Test" );  # the DISTNAME isn't used for building the test anyway.
+        $fbmm->test->build;
+      };
+      $@;
+    });
+    if($error)
+    {
+      my $ctx = Test2::API::context();
+      $ctx->diag($error);
+      $ctx->diag($output);
+      $ctx->release;
+      die $error;
+    }
+    else
+    {
+      my $ctx = Test2::API::context();
+      $ctx->note($output);
+      $ctx->release;
+    }
+  }
+}
+
 sub test
 {
   my($self) = @_;
 
   $self->{test} ||= do {
+    _build_test();
     my $ffi = Test2::Tools::FFI::Platypus->new( @{ $self->{new_args} } );
     my @lib = FFI::CheckLib::find_lib(
       lib => '*',
@@ -241,6 +275,7 @@ sub combined
   my($self) = @_;
 
   $self->{combined} ||= do {
+    _build_test();
     my $rt = $self->runtime;
     my $t  = $self->test;
     my $ffi = Test2::Tools::FFI::Platypus->new( @{ $self->{new_args} } );
