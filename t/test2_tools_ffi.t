@@ -15,7 +15,7 @@ subtest 'ffi->runtime' => sub {
     },
   ;
 
-  lives { $ffi->function(t2t_simple_init => [] => 'void') };
+  try_ok { $ffi->function(t2t_simple_init => [] => 'void') };
 
   is(
     intercept { ffi->runtime->symbol_ok('xxx') },
@@ -70,7 +70,7 @@ subtest 'ffi->combined' => sub {
     }
   ;
 
-  lives { $ffi->function(t2t_simple_init => [] => 'void') };
+  try_ok { $ffi->function(t2t_simple_init => [] => 'void') };
 };
 
 subtest 'call diagnostics from c' => sub {

@@ -54,7 +54,7 @@ subtest 'ffi->combined' => sub {
     }
   ;
 
-  lives { $ffi->function(t2t_simple_init => [] => 'void') };
+  try_ok { $ffi->function(t2t_simple_init => [] => 'void') };
 };
 
 done_testing
